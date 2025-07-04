@@ -31,9 +31,14 @@ const userSchema = new mongoose.Schema(
     address: {
       type: String,
     },
+    permis: {
+      type: String,
+      enum: ["A", "B", "C", "D", "E"],
+      default: "B",
+    },
   },
   {
-    timestamps: true, // createdAt, updatedAt automatiques
+    timestamps: true,
   }
 );
 

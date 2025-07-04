@@ -3,11 +3,13 @@ import React from "react";
 import AssignmentIndIcon from "@mui/icons-material/AssignmentInd";
 import MenuBookIcon from "@mui/icons-material/MenuBook";
 import DashboardIcon from "@mui/icons-material/Dashboard";
-import UserComponent from "../Components/UserComponent";
+import CreateUser from "../Components/User/CreateUser";
 import CourseComponent from "../Components/CourseComponent";
 import ScheduleComponent from "../Components/ScheduleComponent";
 import TeacherCourses from "../Components/TeacherCourses";
 import ManagerCoursesOverview from "../Components/ManagerCoursesOverview";
+import UserList from "../Components/User/UserList";
+import Dashboard from "../Components/Dashboard";
 
 const AdminPage = () => {
   return (
@@ -18,7 +20,12 @@ const AdminPage = () => {
           height: "100vh",
         }}
       >
-        <Grid item className="" size={3} sx={{ padding: 5 }}>
+        <Grid
+          item
+          className=""
+          size={3}
+          sx={{ padding: 5, background: "#f48fb1", color: "white" }}
+        >
           <Box>
             <Box
               sx={{
@@ -102,17 +109,15 @@ const AdminPage = () => {
             </Box>
           </Box>
         </Grid>
-        <Grid
-          item
-          className=""
-          sx={{ background: "#f5f5f5", padding: 5 }}
-          size={9}
-        >
-          {/* <UserComponent /> */}
-          <CourseComponent />
-          <ScheduleComponent />
-          <TeacherCourses />
-          <ManagerCoursesOverview />
+        <Grid item className="" sx={{ background: "", padding: 2 }} size={9}>
+          {/* <CreateUser /> */}
+
+          {/* <CourseComponent /> */}
+          {/* <ScheduleComponent /> */}
+          {/* <TeacherCourses /> */}
+          {/* <ManagerCoursesOverview /> */}
+          {/* <UserList /> */}
+          <Dashboard />
         </Grid>
       </Grid>
     </div>

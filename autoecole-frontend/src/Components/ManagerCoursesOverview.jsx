@@ -50,16 +50,20 @@ const uniqueTeachers = [...new Set(allCourses.map((c) => c.prof))];
 
 const ManagerCoursesOverview = () => {
   return (
-    <div className="p-6">
-      <Typography variant="h4" className="text-center font-bold mb-6">
-        Suivi des cours par enseignant
+    <Card className="p-6" sx={{ background: "#eceff1" }}>
+      <Typography
+        fontWeight="bold"
+        fontFamily="Montserrat"
+        sx={{ marginBlock: 2 }}
+      >
+        MES COURS A EFFECTUES
       </Typography>
 
       {uniqueTeachers.map((teacher) => {
         const teacherCourses = allCourses.filter((c) => c.prof === teacher);
 
         return (
-          <Card key={teacher} className="p-4 mb-6">
+          <Card key={teacher} elevation={0} className="p-4 mb-6">
             <Typography
               variant="h6"
               className="mb-2 font-semibold text-blue-700"
@@ -90,7 +94,7 @@ const ManagerCoursesOverview = () => {
           </Card>
         );
       })}
-    </div>
+    </Card>
   );
 };
 

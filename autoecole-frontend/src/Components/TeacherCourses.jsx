@@ -5,6 +5,7 @@ import {
   Checkbox,
   FormControlLabel,
   Box,
+  Button,
 } from "@mui/material";
 
 // Données statiques simulées pour un enseignant donné
@@ -57,36 +58,40 @@ const TeacherCourses = () => {
   );
 
   return (
-    <div className="p-6">
-      <Typography variant="h5" className="mb-6 font-bold text-center">
-        Mes cours à effectuer
+    <Card className="p-6" sx={{ background: "#eceff1" }}>
+      <Typography
+        fontWeight="bold"
+        fontFamily="Montserrat"
+        sx={{ marginBlock: 2 }}
+      >
+        MES COURS A EFFECTUES
       </Typography>
 
       {teacherCourses.map((course) => (
-        <Card key={course.id} className="p-4 mb-4">
+        <Card key={course.id} elevation={0} className="p-4 mb-4">
           <Box className="flex justify-between items-center">
             <Box>
-              <Typography variant="h6" className="font-semibold">
+              <Typography variant="h6" className="" fontFamily="Poppins">
                 {course.title} – {course.chapter}
               </Typography>
-              <Typography variant="body2" className="text-gray-600">
+              <Typography
+                variant="body2"
+                fontFamily="Poppins"
+                className="text-gray-600"
+              >
                 {course.day} | {course.startHour} - {course.endHour}
               </Typography>
             </Box>
-
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={checkedCourses.includes(course.id)}
-                  onChange={() => handleCheck(course.id)}
-                />
-              }
-              label="Effectué"
-            />
+            <Button
+              variant="contained"
+              sx={{ borderRadius: 6, background: "#f48fb1" }}
+            >
+              Effectué
+            </Button>
           </Box>
         </Card>
       ))}
-    </div>
+    </Card>
   );
 };
 

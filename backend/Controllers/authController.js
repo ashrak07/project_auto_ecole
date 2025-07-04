@@ -122,6 +122,35 @@ const deleteUser = async (req, res) => {
   }
 };
 
+const User = require("../Models/userModel");
+
+// Récupérer les utilisateurs par type de permis
+const getUsersByPermis = async (req, res) => {
+  try {
+    const { type } = req.params;
+
+    const users = await User.find({ permis: type });
+
+    if (users.length === 0) {
+      return res
+        .status(404)
+        .json({ message: "Aucun utilisateur trouvé avec ce permis." });
+    }
+
+    res.status(200).json(users);
+  } catch (error) {
+    console.error(
+      "Erreur lors de la récupération des utilisateurs par permis :",
+      error
+    );
+    res.status(500).json({ message: "Erreur serveur" });
+  }
+};
+
+module.exports = {
+  getUsersByPermis,
+};
+
 module.exports = {
   createUser,
   login,

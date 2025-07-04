@@ -1,5 +1,6 @@
 import React from "react";
-import { Card, Typography, Box } from "@mui/material";
+import { Card, Typography, Box, Chip } from "@mui/material";
+import AccessTimeFilledIcon from "@mui/icons-material/AccessTimeFilled";
 
 const days = ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi"];
 
@@ -41,10 +42,13 @@ const staticCourses = [
 const SheduleComponent = () => {
   return (
     <div className="p-6">
-      <Typography variant="h4" className="mb-6 text-center font-bold">
-        Emploi du temps
+      <Typography
+        fontWeight="bold"
+        fontFamily="Montserrat"
+        sx={{ marginBlock: 2 }}
+      >
+        EMPLOI DE TEMPS
       </Typography>
-
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
         {days.map((day) => {
           const dailyCourses = staticCourses.filter(
@@ -52,32 +56,54 @@ const SheduleComponent = () => {
           );
 
           return (
-            <Card key={day} className="p-4">
+            <Card key={day} className="p-4" sx={{ background: "#bbdefb" }}>
               <Typography
                 variant="h6"
-                className="mb-2 font-semibold text-blue-600"
+                fontFamily="Poppins"
+                className="mb-2  text-blue-600"
               >
                 {day}
               </Typography>
 
               {dailyCourses.length > 0 ? (
                 dailyCourses.map((course, index) => (
-                  <Box
-                    key={index}
-                    className="bg-gray-100 p-3 rounded mb-2 shadow-sm"
-                  >
-                    <Typography className="font-bold">
+                  <Box key={index} className="bg-white p-3 rounded mb-2 ">
+                    <Typography
+                      className=""
+                      fontWeight="bold"
+                      fontFamily="Montserrat"
+                    >
                       {course.title}
                     </Typography>
-                    <Typography className="text-sm italic text-gray-600">
+                    <Typography
+                      className=""
+                      fontFamily="Poppins"
+                      fontSize="small"
+                    >
                       {course.chapter}
                     </Typography>
-                    <Typography className="text-sm">
+                    <Typography
+                      className=""
+                      fontFamily="Poppins"
+                      fontSize="small"
+                      sx={{ marginBlock: 1 }}
+                    >
+                      <AccessTimeFilledIcon
+                        fontSize="x-small"
+                        sx={{ marginRight: 1 }}
+                      />
                       {course.startHour} - {course.endHour}
                     </Typography>
-                    <Typography className="text-sm text-gray-600">
-                      Enseignant : {course.prof}
-                    </Typography>
+                    <Chip
+                      label={course.prof}
+                      size="small"
+                      fontFamily="Poppins"
+                      color="#f48fb1"
+                      sx={{
+                        background: "#f48fb1",
+                        color: "white",
+                      }}
+                    ></Chip>
                   </Box>
                 ))
               ) : (
