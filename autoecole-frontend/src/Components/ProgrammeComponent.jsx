@@ -11,12 +11,16 @@ const ProgrammeComponent = () => {
           <Grid size={4} className="b4" item xs={12} sm={6} md={4}>
             <Card elevation={0} className="p-5" sx={{ height: "240px" }}>
               <Box>
-                <span>
-                  <AssignmentTurnedInIcon />
+                <span style={{ color: "#f50057", fontWeight: "bold" }}>
+                  <AssignmentTurnedInIcon sx={{ marginRight: 1 }} />
                   Cours de code
                 </span>
               </Box>
-              <Typography sx={{ marginTop: 2 }}>
+              <Typography
+                sx={{ marginTop: 2 }}
+                fontFamily="Poppins"
+                fontSize="small"
+              >
                 L'apprentissage du code de la route est reparti sur 10 cours
                 d'environ 2h. Vous pouvez y assister en presentiel en fonction
                 de votre disponibilite ou apprendre chez vous avec les supports
@@ -27,12 +31,16 @@ const ProgrammeComponent = () => {
           <Grid size={4} className="b4" item xs={12} sm={6} md={4}>
             <Card elevation={0} className="p-5 " sx={{ height: "240px" }}>
               <Box>
-                <span>
-                  <AssignmentTurnedInIcon />
+                <span style={{ color: "#f50057", fontWeight: "bold" }}>
+                  <AssignmentTurnedInIcon sx={{ marginRight: 1 }} />
                   Cours de conduite
                 </span>
               </Box>
-              <Typography sx={{ marginTop: 2 }}>
+              <Typography
+                sx={{ marginTop: 2 }}
+                fontFamily="Poppins"
+                fontSize="small"
+              >
                 Les cours de conduites au sein de l'auto ecole sont adaptés au
                 niveau et au besoin de chacun de chacun. Pour les etudiants,
                 nous avons mis un dispositif qui leur permet de bien assimiler
@@ -43,12 +51,16 @@ const ProgrammeComponent = () => {
           <Grid size={4} className="b4" item xs={12} sm={6} md={4}>
             <Card elevation={0} className="p-5" sx={{ height: "240px" }}>
               <Box>
-                <span>
-                  <AssignmentTurnedInIcon />
+                <span style={{ color: "#f50057", fontWeight: "bold" }}>
+                  <AssignmentTurnedInIcon sx={{ marginRight: 1 }} />
                   Perfectionnement
                 </span>
               </Box>
-              <Typography sx={{ marginTop: 2 }}>
+              <Typography
+                sx={{ marginTop: 2 }}
+                fontFamily="Poppins"
+                fontSize="small"
+              >
                 Pour ceux qui n'ont pas conduit depuis un moment et ne se
                 sentent pas en confiance pour prendre le volant. Nous proposons
                 des cours de perfectionnement à la conduite et donnons aussi

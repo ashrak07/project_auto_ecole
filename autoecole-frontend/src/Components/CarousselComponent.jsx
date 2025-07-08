@@ -10,6 +10,7 @@ import {
 } from "@mui/material";
 import React from "react";
 import { Navigate, useNavigate } from "react-router-dom";
+import AccountMenu from "./AccountMenu";
 
 const CarousselComponent = () => {
   const navigate = useNavigate();
@@ -32,7 +33,7 @@ const CarousselComponent = () => {
         >
           <CardMedia
             component="img"
-            image="/driver.jpg"
+            image="/personne-se-preparant-a-obtenir-un-permis-de-conduire.jpg"
             sx={{
               height: "100%",
               width: "100%",
@@ -49,47 +50,51 @@ const CarousselComponent = () => {
               opacity: 0.6,
             }}
           ></Box>
-          <AppBar
-            elevation={0}
-            // position="fixed"
-            sx={{ backgroundColor: "transparent" }}
-          >
+          <AppBar elevation={0} sx={{ background: "none" }}>
+            <Box
+              sx={{
+                background: "#1a237e",
+                position: "absolute",
+                height: "60px",
+                width: "100%",
+                top: 0,
+                opacity: 0.8,
+              }}
+            ></Box>
             <Toolbar
               sx={{
                 justifyContent: "space-between",
               }}
             >
-              <Box>
-                <Typography variant="h6" component="div">
-                  Auto-école
+              <Box sx={{}}>
+                <Typography fontFamily="Montserrat" fontSize="large">
+                  Auto-école{" "}
+                  <span
+                    style={{
+                      color: "#f50057",
+                      letterSpacing: 1,
+                      fontWeight: "bold",
+                    }}
+                  >
+                    {" "}
+                    SMART{" "}
+                  </span>
                 </Typography>
               </Box>
               <Box
                 sx={{
                   display: "flex",
+                  alignItems: "center",
                 }}
               >
                 <Typography sx={{ marginInline: 1 }}>Bon à savoir</Typography>
                 <Typography sx={{ marginInline: 1 }}>Présentation</Typography>
                 <Typography sx={{ marginInline: 1 }}>Programme</Typography>
                 <Typography sx={{ marginInline: 1 }}>Permis</Typography>
+                <AccountMenu />
               </Box>
             </Toolbar>
           </AppBar>
-          {/* <Box
-            className="bg-white bg-opacity-50 text-black p-4 space-y-2"
-            sx={{
-              position: "absolute",
-              top: 0,
-              width: "100%",
-              display: "flex",
-            }}
-          >
-            <Typography>Bon à savoir</Typography>
-            <Typography>Présentation</Typography>
-            <Typography>Programme</Typography>
-            <Typography>Permis</Typography>
-          </Box> */}
           <Box
             // className="bg-black bg-opacity-50 text-white p-4 space-y-2"
             className=" text-white p-4  ml-4"

@@ -1,4 +1,11 @@
-import { Box, Card, Container, Grid, Typography } from "@mui/material";
+import {
+  Box,
+  Card,
+  Container,
+  Grid,
+  Typography,
+  CardMedia,
+} from "@mui/material";
 import React from "react";
 import TwoWheelerIcon from "@mui/icons-material/TwoWheeler";
 import BeenhereIcon from "@mui/icons-material/Beenhere";
@@ -87,7 +94,17 @@ const PermisComponent = () => {
             </Grid>
           </Grid>
           <Grid item size={6}>
-            2
+            <Box elevation={0} className="">
+              <CardMedia
+                component="img"
+                image="/personneconduire.jpg"
+                sx={{
+                  objectFit: "cover",
+                  height: 260,
+                  borderRadius: 2,
+                }}
+              />
+            </Box>
           </Grid>
         </Grid>
       </Container>

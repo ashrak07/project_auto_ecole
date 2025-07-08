@@ -41,14 +41,12 @@ const staticCourses = [
 
 const SheduleComponent = () => {
   return (
-    <div className="p-6">
-      <Typography
-        fontWeight="bold"
-        fontFamily="Montserrat"
-        sx={{ marginBlock: 2 }}
-      >
-        EMPLOI DE TEMPS
-      </Typography>
+    <div className="p-3">
+      <Card sx={{ padding: 3, marginBottom: 5 }} elevation={0}>
+        <Typography fontWeight="bold" fontFamily="Montserrat">
+          EMPLOI DE TEMPS
+        </Typography>
+      </Card>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
         {days.map((day) => {
           const dailyCourses = staticCourses.filter(
@@ -56,11 +54,11 @@ const SheduleComponent = () => {
           );
 
           return (
-            <Card key={day} className="p-4" sx={{ background: "#bbdefb" }}>
+            <Card key={day} className="p-4" sx={{ background: "#90caf9" }}>
               <Typography
                 variant="h6"
                 fontFamily="Poppins"
-                className="mb-2  text-blue-600"
+                sx={{ marginBottom: 2, color: "white" }}
               >
                 {day}
               </Typography>
@@ -70,8 +68,8 @@ const SheduleComponent = () => {
                   <Box key={index} className="bg-white p-3 rounded mb-2 ">
                     <Typography
                       className=""
-                      fontWeight="bold"
-                      fontFamily="Montserrat"
+                      // fontWeight="bold"
+                      fontFamily="Poppins"
                     >
                       {course.title}
                     </Typography>
@@ -90,16 +88,16 @@ const SheduleComponent = () => {
                     >
                       <AccessTimeFilledIcon
                         fontSize="x-small"
-                        sx={{ marginRight: 1 }}
+                        sx={{ marginRight: "2px" }}
                       />
                       {course.startHour} - {course.endHour}
                     </Typography>
                     <Chip
                       label={course.prof}
                       size="small"
-                      fontFamily="Poppins"
                       color="#f48fb1"
                       sx={{
+                        fontFamily: "Poppins",
                         background: "#f48fb1",
                         color: "white",
                       }}
@@ -107,7 +105,7 @@ const SheduleComponent = () => {
                   </Box>
                 ))
               ) : (
-                <Typography className="text-gray-500">Aucun cours</Typography>
+                <Typography sx={{ color: "white" }}>Aucun cours</Typography>
               )}
             </Card>
           );

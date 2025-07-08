@@ -5,6 +5,7 @@ import {
   Typography,
   Container,
   CardMedia,
+  Divider,
 } from "@mui/material";
 import React from "react";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
@@ -115,10 +116,10 @@ const InfoComponent = () => {
             <Box elevation={0} className="">
               <CardMedia
                 component="img"
-                image="/lkloeppel.jpg"
+                image="/personne conduire (1).jpg"
                 sx={{
                   objectFit: "cover",
-                  height: 150,
+                  height: 250,
                   borderRadius: 2,
                 }}
               />
@@ -126,15 +127,15 @@ const InfoComponent = () => {
           </Grid>
           <Grid size={6} item xs={12} sm={12} md={4} sx={{}}>
             <Box elevation={0} className=" p-5 ">
-              <Typography sx={{}} fontFamily="Poppins">
+              <Typography sx={{}} fontFamily="Poppins" fontSize="small">
                 <DoneIcon sx={{ marginRight: 2, color: "#1976d2" }} />
                 Monitrice competente et experimentée
               </Typography>
-              <Typography fontFamily="Poppins">
+              <Typography fontFamily="Poppins" fontSize="small">
                 <DoneIcon sx={{ marginRight: 2, color: "#1976d2" }} />
                 Horaires de formation adaptés à vos disponibilités
               </Typography>
-              <Typography sx={{}} fontFamily="Poppins">
+              <Typography sx={{}} fontFamily="Poppins" fontSize="small">
                 <DoneIcon sx={{ marginRight: 2, color: "#1976d2" }} />
                 Frais de formation abordable
               </Typography>

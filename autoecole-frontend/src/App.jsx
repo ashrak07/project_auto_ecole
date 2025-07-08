@@ -1,11 +1,8 @@
 import { BrowserRouter, Router } from "react-router-dom";
 import "./App.css";
-import Home from "./Components/CarousselComponent";
-import InfoComponent from "./Components/InfoComponent";
-import PermisComponent from "./Components/PermisComponent";
-import ProgrammeComponent from "./Components/ProgrammeComponent";
-import LoginPage from "./Pages/LoginPage";
+
 import AppRoutes from "../src/Router/router";
+import HeaderComponent from "./Components/HeaderComponent";
 const App = () => {
   return (
     <>

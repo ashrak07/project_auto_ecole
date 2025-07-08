@@ -20,10 +20,9 @@ const userSchema = new mongoose.Schema(
       enum: ["student", "teacher", "manager"],
       default: "student",
     },
-    email: {
+    phone: {
       type: String,
       unique: true,
-      sparse: true,
     },
     dateOfBirth: {
       type: Date,
@@ -32,7 +31,11 @@ const userSchema = new mongoose.Schema(
       type: String,
     },
     permis: {
-      type: String,
+      type: [
+        {
+          type: String,
+        },
+      ],
       enum: ["A", "B", "C", "D", "E"],
       default: "B",
     },

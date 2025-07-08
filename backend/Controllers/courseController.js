@@ -193,10 +193,6 @@ const getAllCoursesWithStatus = asyncHandler(async (req, res) => {
   res.status(200).json(data);
 });
 
-const Course = require("../Models/courseModel");
-const User = require("../Models/userModel");
-const asyncHandler = require("express-async-handler");
-
 // @desc    Afficher tous les emplois du temps (planning de cours)
 // @route   GET /api/planning
 // @access  Privé (tous rôles)

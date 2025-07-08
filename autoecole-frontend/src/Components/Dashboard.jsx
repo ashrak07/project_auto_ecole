@@ -18,29 +18,43 @@ const stats = [
     label: "Total utilisateurs",
     value: 120,
     goal: 200,
-    icon: <PeopleIcon fontSize="large" className="text-blue-500" />,
-    color: "primary",
+    icon: (
+      <PeopleIcon
+        fontSize="large"
+        sx={{
+          color: "#f50057",
+        }}
+      />
+    ),
+    color: "#f50057",
   },
   {
     label: "Enseignants",
     value: 15,
     goal: 30,
-    icon: <SchoolIcon fontSize="large" className="text-green-500" />,
-    color: "success",
+    icon: (
+      <SchoolIcon
+        fontSize="large"
+        sx={{
+          color: "#7b1fa2",
+        }}
+      />
+    ),
+    color: "#7b1fa2",
   },
   {
     label: "Élèves",
     value: 95,
     goal: 150,
-    icon: <PersonIcon fontSize="large" className="text-purple-500" />,
-    color: "secondary",
+    icon: <PersonIcon fontSize="large" sx={{ color: "#00796b" }} />,
+    color: "#00796b",
   },
   {
     label: "Cours créés",
     value: 30,
     goal: 60,
-    icon: <EventIcon fontSize="large" className="text-orange-500" />,
-    color: "warning",
+    icon: <EventIcon fontSize="large" sx={{ color: "#388e3c" }} />,
+    color: "#388e3c",
   },
 ];
 
@@ -48,25 +62,61 @@ const getProgress = (value, goal) => Math.min((value / goal) * 100, 100);
 
 const Dashboard = () => {
   return (
-    <Box className="p-5">
-      <Typography
-        variant="h4"
-        align="center"
-        gutterBottom
-        className="font-bold"
+    <Box className="p-3">
+      <Card
+        elevation={0}
+        className=""
+        sx={{
+          padding: 2,
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          marginBottom: 5,
+        }}
       >
-        Tableau de bord
-      </Typography>
+        <div>
+          <Typography
+            fontWeight="bold"
+            fontFamily="Montserrat"
+            sx={{ marginBlock: 2 }}
+          >
+            TABLEAU DE BORD
+          </Typography>
+        </div>
+      </Card>
       <Grid container spacing={3} className="mt-4">
         {stats.map((item, index) => (
-          <Grid item xs={12} sm={6} md={3} key={index}>
-            <Card className="shadow-md hover:shadow-xl transition-all duration-300">
-              <CardContent>
-                <Box className="flex flex-col items-center gap-2">
-                  {item.icon}
-                  <Typography variant="h6" className="text-center font-medium">
-                    {item.label}
-                  </Typography>
+          <Grid item xs={12} sm={6} md={6} key={index}>
+            <div className="transition-all duration-300">
+              <Card
+                elevation={0}
+                sx={{
+                  padding: 3,
+                  borderRadius: 5,
+                  ":hover": {
+                    boxShadow: 3,
+                    cursor: "pointer",
+                  },
+                }}
+              >
+                <div className="flex flex-row items-center gap-2">
+                  <div className="text-center">
+                    <div className="flex">
+                      <div className="mr-2">{item.icon}</div>
+                      <Typography
+                        variant="h6"
+                        className="text-center font-medium"
+                      >
+                        {item.label}
+                      </Typography>
+                    </div>
+                    <Typography
+                      variant="h5"
+                      className="mt-1 text-gray-600 text-sm"
+                    >
+                      {item.value}
+                    </Typography>
+                  </div>
                   <Box position="relative" display="inline-flex">
                     <CircularProgress
                       variant="determinate"
@@ -74,6 +124,7 @@ const Dashboard = () => {
                       size={80}
                       thickness={5}
                       color={item.color}
+                      sx={{ color: item.color }}
                     />
                     <Box
                       top={0}
@@ -94,12 +145,9 @@ const Dashboard = () => {
                       </Typography>
                     </Box>
                   </Box>
-                  <Typography className="mt-1 text-gray-600 text-sm">
-                    {item.value} / {item.goal}
-                  </Typography>
-                </Box>
-              </CardContent>
-            </Card>
+                </div>
+              </Card>
+            </div>
           </Grid>
         ))}
       </Grid>
