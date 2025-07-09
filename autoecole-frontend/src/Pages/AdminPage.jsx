@@ -57,7 +57,18 @@ const AdminPage = () => {
           }}
         >
           <Box>
-            <Box sx={{ marginBottom: 3 }} className="">
+            <Box
+              sx={{
+                marginBottom: 3,
+                borderRadius: 5,
+                padding: 1,
+                ":hover": {
+                  boxShadow: 3,
+                  cursor: "pointer",
+                },
+              }}
+              onClick={() => navigate("/")}
+            >
               <ArrowBackIosNewIcon sx={{ marginRight: 2 }} />
               Page d'accuel
             </Box>
@@ -69,7 +80,7 @@ const AdminPage = () => {
               <Typography
                 sx={{ color: "white", margin: 1.5 }}
                 fontFamily="Montserrat"
-                fontSize="large"
+                fontSize="large
               >
                 Auto-école{" "}
                 <span

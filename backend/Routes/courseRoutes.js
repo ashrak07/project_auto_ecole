@@ -12,7 +12,8 @@ const { roleMiddleware } = require("../Middlewares/roleMiddleware");
 const router = express.Router();
 
 // Création de cours — manager uniquement
-router.post("/courses", roleMiddleware(["manager"]), createCourse);
+// router.post("/courses", roleMiddleware(["manager"]), createCourse);
+router.post("/courses", createCourse);
 
 // Ajout de checkpoint — teacher uniquement
 router.post("/courses/checkpoint", roleMiddleware(["teacher"]), addCheckpoint);

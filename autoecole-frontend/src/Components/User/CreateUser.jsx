@@ -17,8 +17,31 @@ import Checkbox from "@mui/material/Checkbox";
 import { useDispatch } from "react-redux";
 import { setSelectedList } from "../../Redux/clientSlice";
 import dayjs from "dayjs";
+import { AxiosInstance } from "../../Axios/AxiosInstance";
+import { createUser } from "../../Axios/API";
 
 const CreateUser = () => {
+  const [form, setForm] = useState({
+    lastName: "",
+    firstName: "",
+    phone: "",
+    role: "",
+    address: "",
+    birthday: dayjs(),
+    permis: [],
+  });
+
+  const fetchCreateUser = async () => {
+    try {
+      const response = await createUser(form);
+      if (response) {
+        console.log("res =>", response.data);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   // const [showPassword, setShowPassword] = React.useState(false);
   const dispatch = useDispatch();
 
@@ -32,28 +55,14 @@ const CreateUser = () => {
   //   event.preventDefault();
   // };
 
-  const [form, setForm] = useState({
-    lastName: "",
-    firstName: "",
-    phone: "",
-    role: "",
-    address: "",
-    birthday: dayjs(),
-    permis: [],
-  });
-
   const setList = () => {
     dispatch(setSelectedList(true));
   };
 
   const roles = ["Enseignant", "Etudiant"];
 
-  const create = () => {
-    console.log("user", form);
-  };
-
   return (
-    <Box>
+    <div>
       <Card
         elevation={0}
         className=""
@@ -95,7 +104,7 @@ const CreateUser = () => {
           width: "60ch",
         }}
       >
-        <Box sx={{}} className="">
+        <div>
           <Box
             className=""
             sx={{ display: "flex", justifyContent: "space-between", gap: 1 }}
@@ -113,7 +122,6 @@ const CreateUser = () => {
                     [e.target.name]: e.target.value,
                   }))
                 }
-                fullWidth
               />
             </div>
             <div className="my-2 " style={{ width: "50%" }}>
@@ -170,7 +178,10 @@ const CreateUser = () => {
                 fullWidth
               >
                 {roles.map((role) => (
-                  <MenuItem key={role} value={role}>
+                  <MenuItem
+                    key={role}
+                    value={role === "Enseignant" ? "teacher" : "student"}
+                  >
                     {role}
                   </MenuItem>
                 ))}
@@ -364,10 +375,10 @@ const CreateUser = () => {
               label="E"
             />
           </Box>
-        </Box>
+        </div>
         <Box sx={{ marginBlock: 3 }}>
           <Button
-            onClick={create}
+            onClick={fetchCreateUser}
             fullWidth
             variant="contained"
             sx={{ background: "#1976d2" }}
@@ -376,7 +387,7 @@ const CreateUser = () => {
           </Button>
         </Box>
       </Card>
-    </Box>
+    </div>
   );
 };
 

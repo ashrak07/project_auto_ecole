@@ -1,46 +1,45 @@
 const Course = require("../Models/courseModel");
-const User = require("../Models/userModel");
+const Users = require("../Models/userModel");
 const asyncHandler = require("express-async-handler");
 
-const addCheckpoint = async (req, res) => {
-  try {
-    const { courseId, chapterIndex } = req.body;
+// const addCheckpoint = async (req, res) => {
+//   try {
+//     const { courseId, chapterIndex } = req.body;
 
-    const course = await Course.findById(courseId);
-    if (!course) return res.status(404).json({ msg: "Cours introuvable" });
+//     const course = await Course.findById(courseId);
+//     if (!course) return res.status(404).json({ msg: "Cours introuvable" });
 
-    const chapter = course.chapters[chapterIndex];
-    if (!chapter) return res.status(400).json({ msg: "Chapitre introuvable" });
+//     const chapter = course.chapters[chapterIndex];
+//     if (!chapter) return res.status(400).json({ msg: "Chapitre introuvable" });
 
-    if (chapter.checkpoint.done) {
-      return res.status(400).json({ msg: "Chapitre déjà validé" });
-    }
+//     if (chapter.checkpoint.done) {
+//       return res.status(400).json({ msg: "Chapitre déjà validé" });
+//     }
 
-    chapter.checkpoint = {
-      done: true,
-      date: new Date(),
-    };
+//     chapter.checkpoint = {
+//       done: true,
+//       date: new Date(),
+//     };
 
-    await course.save();
+//     await course.save();
 
-    res.json({ msg: "Chapitre validé avec succès" });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ msg: "Erreur serveur" });
-  }
-};
+//     res.json({ msg: "Chapitre validé avec succès" });
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({ msg: "Erreur serveur" });
+//   }
+// };
 
 const createCourse = async (req, res) => {
   try {
-    const { title, date, teacherId, chapters, schedule } = req.body;
+    const { title, day, teacherId, chapter, startTime, endTime } = req.body;
+    console.log("req:", req.body);
 
-    // Vérifier les données obligatoires
-    if (!title || !date || !teacherId) {
-      return res.status(400).json({ msg: "Titre, date et enseignant requis" });
-    }
+    // Vérifier que l'enseignant existe '
+    const teacher = await Users.findOne({ _id: teacherId });
 
-    // Vérifier que l'enseignant existe et a bien le rôle 'teacher'
-    const teacher = await User.findOne({ _id: teacherId, role: "teacher" });
+    console.log("teacher => ", teacher);
+
     if (!teacher) {
       return res
         .status(400)
@@ -50,19 +49,15 @@ const createCourse = async (req, res) => {
     // Créer le cours
     const course = new Course({
       title,
-      date,
-      schedule,
-      teacher: teacher._id,
-      chapters: Array.isArray(chapters)
-        ? chapters.map((ch) => ({
-            title: ch.title,
-            description: ch.description,
-            checkpoint: { done: false },
-          }))
-        : [],
+      day,
+      startTime,
+      endTime,
+      teacherId: teacher._id,
+      chapter,
     });
 
     await course.save();
+    console.log("course =>", course);
 
     res.status(201).json({ msg: "Cours créé avec succès", course });
   } catch (error) {
@@ -213,10 +208,6 @@ const getAllPlannings = asyncHandler(async (req, res) => {
 
   res.status(200).json(formattedCourses);
 });
-
-const Checkpoint = require("../Models/checkpointModel");
-const Course = require("../Models/courseModel");
-const asyncHandler = require("express-async-handler");
 
 // @desc    Ajouter un checkpoint (marquer un chapitre comme terminé par un enseignant)
 // @route   POST /api/courses/checkpoint

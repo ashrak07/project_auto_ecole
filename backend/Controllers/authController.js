@@ -6,49 +6,46 @@ const { generateMatricule } = require("../Utils/counter");
 
 const createUser = asyncHandler(async (req, res) => {
   try {
-    const { name, email, password, role, dateOfBirth, address } = req.body;
+    const { firstName, lastName, phone, role, dateOfBirth, address, permis } =
+      req.body;
 
     if (!["student", "teacher", "manager"].includes(role)) {
       return res.status(400).json({ msg: "Rôle invalide" });
     }
-
-    // Vérifier si email déjà utilisé (facultatif si email est obligatoire)
-    if (email) {
-      const existingEmail = await Users.findOne({ email });
-      if (existingEmail)
-        return res.status(400).json({ msg: "Email déjà utilisé" });
-    }
+    console.log("-- invoking createUser --");
+    console.log("req:", req);
+    // // Vérifier si email déjà utilisé (facultatif si email est obligatoire)
+    // if (email) {
+    //   const existingEmail = await Users.findOne({ email });
+    //   if (existingEmail)
+    //     return res.status(400).json({ msg: "Email déjà utilisé" });
+    // }
 
     // Générer matricule
     const matricule = await generateMatricule(role);
 
     // Hasher le mot de passe
-    const hashedPassword = await bcrypt.hash(password, 10);
+    // const hashedPassword = await bcrypt.hash(password, 10);
 
     // Créer utilisateur
     const user = new Users({
-      name,
-      email,
-      password: hashedPassword,
+      firstName,
+      lastName,
+      // email,
+      // password: hashedPassword,
       role,
       matricule,
       dateOfBirth,
       address,
+      permis,
     });
 
     await user.save();
+    console.log("user ===> ", user);
 
     res.status(201).json({
       msg: "Utilisateur créé",
-      user: {
-        id: user._id,
-        name: user.name,
-        role: user.role,
-        matricule: user.matricule,
-        email: user.email,
-        dateOfBirth: user.dateOfBirth,
-        address: user.address,
-      },
+      data: user,
     });
   } catch (error) {
     console.error(error);
