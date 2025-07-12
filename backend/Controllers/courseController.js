@@ -1,4 +1,5 @@
 const Course = require("../Models/courseModel");
+const Check = require("../Models/checkPointModel");
 const Users = require("../Models/userModel");
 const asyncHandler = require("express-async-handler");
 
@@ -35,9 +36,7 @@ const createCourse = async (req, res) => {
     const { title, day, teacherId, chapter, startTime, endTime } = req.body;
     console.log("req:", req.body);
 
-    // Vérifier que l'enseignant existe '
-    const teacher = await Users.findOne({ _id: teacherId });
-
+    const teacher = await Users.findOne({ _id: teacherId, role: "teacher" });
     console.log("teacher => ", teacher);
 
     if (!teacher) {
@@ -46,7 +45,6 @@ const createCourse = async (req, res) => {
         .json({ msg: "Enseignant introuvable ou rôle incorrect" });
     }
 
-    // Créer le cours
     const course = new Course({
       title,
       day,
@@ -59,7 +57,7 @@ const createCourse = async (req, res) => {
     await course.save();
     console.log("course =>", course);
 
-    res.status(201).json({ msg: "Cours créé avec succès", course });
+    res.status(201).json({ msg: "Cours créé avec succès", data: course });
   } catch (error) {
     console.error(error);
     res.status(500).json({ msg: "Erreur serveur" });
@@ -159,46 +157,114 @@ const getTeacherCourses = asyncHandler(async (req, res) => {
   res.status(200).json(courses);
 });
 
+const getAllCourse = asyncHandler(async (req, res) => {
+  try {
+    const course = await Course.find().populate("teacherId").lean();
+    if (course) {
+      console.log("course:", course);
+    }
+    res.status(200).json({
+      data: course,
+      count: course.length,
+    });
+  } catch (error) {
+    console.error(error);
+  }
+});
+
+// const getAllCoursesWithStatus = asyncHandler(async (req, res) => {
+//   const courses = await Course.find().lean();
+
+//   const checkpointMap = {};
+//   const checkpoints = await Check.find();
+//   if (checkpoints) {
+//     console.log("checkpoints =>", checkpoints);
+//     checkpoints.forEach((cp) => {
+//       checkpointMap[cp.courseId.toString()] = cp;
+//     });
+//     console.log("checkpointMap =>", checkpointMap);
+//   }
+
+//   // Facultatif : récupérer les noms des enseignants
+//   const teachers = await Users.find({ role: "teacher" }).lean();
+//   console.log("teachres =>", teachers);
+//   const teacherMap = {};
+//   teachers.forEach((t) => {
+//     teacherMap[t._id.toString()] = t.firstName;
+//   });
+//   console.log("teacherMap =>", teacherMap);
+
+//   const data = courses.map((course) => {
+//     const cp = checkpointMap[course._id.toString()];
+//     console.log("cp =>", cp);
+//     return {
+//       ...course,
+//       teacherName: teacherMap[course.teacherId.toString()] || "Inconnu",
+//       done: cp ? cp.done : false,
+//       checkedAt: cp?.checkedAt || null,
+//     };
+//   });
+
+//   res.status(200).json(data);
+// });
+
 const getAllCoursesWithStatus = asyncHandler(async (req, res) => {
   const courses = await Course.find().lean();
+  const teachers = await Users.find({ role: "teacher" }).lean();
+  const checkpoints = await Check.find().lean();
+
+  const teacherMap = {};
+  teachers.forEach((teacher) => {
+    teacherMap[teacher._id.toString()] =
+      teacher.firstName + " " + teacher.lastName;
+    console.log("teacherMap =>", teacherMap);
+  });
 
   const checkpointMap = {};
-  const checkpoints = await Checkpoint.find();
   checkpoints.forEach((cp) => {
     checkpointMap[cp.courseId.toString()] = cp;
   });
 
-  // Facultatif : récupérer les noms des enseignants
-  const teachers = await User.find({ role: "teacher" }).lean();
-  const teacherMap = {};
-  teachers.forEach((t) => {
-    teacherMap[t._id.toString()] = t.name;
-  });
+  const grouped = {};
 
-  const data = courses.map((course) => {
+  courses.forEach((course) => {
+    const teacherId = course.teacherId?.toString() || "Inconnu";
+    const teacherName = teacherMap[teacherId] || "Inconnu";
     const cp = checkpointMap[course._id.toString()];
-    return {
+
+    const courseWithStatus = {
       ...course,
-      teacherName: teacherMap[course.teacherId.toString()] || "Inconnu",
-      done: cp ? cp.done : false,
+      done: cp?.done || false,
       checkedAt: cp?.checkedAt || null,
     };
-  });
 
-  res.status(200).json(data);
+    if (!grouped[teacherId]) {
+      grouped[teacherId] = {
+        teacherId,
+        teacherName,
+        courses: [],
+      };
+    }
+
+    grouped[teacherId].courses.push(courseWithStatus);
+  });
+  console.log("grouped =>", grouped);
+
+  // Convertir l'objet en tableau pour le retour
+  const result = Object.values(grouped);
+  console.log("result =>", result);
+
+  res.status(200).json(result);
 });
 
-// @desc    Afficher tous les emplois du temps (planning de cours)
-// @route   GET /api/planning
-// @access  Privé (tous rôles)
 const getAllPlannings = asyncHandler(async (req, res) => {
   const courses = await Course.find().lean().sort({ day: 1, startHour: 1 });
 
   // Ajouter le nom du professeur
-  const teachers = await User.find({ role: "teacher" }).lean();
+  const teachers = await Users.find({ role: "teacher" }).lean();
   const teacherMap = {};
   teachers.forEach((t) => {
-    teacherMap[t._id.toString()] = t.name;
+    teacherMap[t._id.toString()] = t.firstName + " " + t.lastName;
   });
 
   const formattedCourses = courses.map((course) => ({
@@ -209,9 +275,6 @@ const getAllPlannings = asyncHandler(async (req, res) => {
   res.status(200).json(formattedCourses);
 });
 
-// @desc    Ajouter un checkpoint (marquer un chapitre comme terminé par un enseignant)
-// @route   POST /api/courses/checkpoint
-// @access  Privé (enseignant uniquement)
 const addCheckpoint = asyncHandler(async (req, res) => {
   const { courseId } = req.body;
   const teacherId = req.user._id; // supposé défini par authMiddleware
@@ -260,4 +323,7 @@ module.exports = {
   getPlanning,
   addCheckpoint,
   generateCourses,
+  getAllCourse,
+  getAllCoursesWithStatus,
+  getAllPlannings,
 };

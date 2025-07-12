@@ -6,7 +6,7 @@ const courseSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    chapters: {
+    chapter: {
       type: String,
     },
     day: {
@@ -24,7 +24,7 @@ const courseSchema = new mongoose.Schema(
     },
     teacherId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+      ref: "Users",
       required: true,
     },
   },

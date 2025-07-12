@@ -1,25 +1,77 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Card } from "@mui/material";
 import { useState } from "react";
 import { Box, TextField, Button, MenuItem, Typography } from "@mui/material";
 import ListIcon from "@mui/icons-material/List";
 import { useDispatch } from "react-redux";
 import { setSelectedCourse } from "../../Redux/courseSlice";
+import { createCourse, getTeacherUser } from "../../Axios/API";
+import Popover from "@mui/material/Popover";
+import DoneIcon from "@mui/icons-material/Done";
+import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 
 const days = ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi"];
-const Professors = ["Mr Andry", "Mr Aina", "Mr Anja", "Mr Antso"];
 
 const CreateCourse = () => {
   const dispatch = useDispatch();
+  const [loading, setLoading] = useState(false);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [success, setSuccess] = useState(true);
+
+  const [professor, setProfessor] = useState([]);
+  const open = Boolean(anchorEl);
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
   const [course, setCourse] = useState({
     title: "",
     chapter: "",
     day: "",
-    prof: "",
-    startHour: "",
-    endHour: "",
+    startTime: "",
+    endTime: "",
+    teacherId: "",
   });
+
+  const emptyCourse = () => {
+    setCourse({
+      title: "",
+      chapter: "",
+      day: "",
+      startTime: "",
+      endTime: "",
+      teacherId: "",
+    });
+  };
+
+  const fetchTeacherUser = async () => {
+    const response = await getTeacherUser();
+    if (response) {
+      console.log("res ++", response);
+      setProfessor(response.data.data);
+    }
+  };
+
+  const fetchCreateCourse = async () => {
+    try {
+      console.log("course:", course);
+      const response = await createCourse(course);
+      if (response) {
+        console.log("res =>", response);
+        setAnchorEl(true);
+        setSuccess(true);
+      } else {
+        setAnchorEl(true);
+        setSuccess(false);
+      }
+    } catch (error) {
+      console.error(error);
+    } finally {
+      emptyCourse();
+      setLoading(false);
+    }
+  };
 
   const handleChange = (e) => {
     setCourse({ ...course, [e.target.name]: e.target.value });
@@ -28,9 +80,9 @@ const CreateCourse = () => {
     dispatch(setSelectedCourse(true));
   };
 
-  const create = () => {
-    console.log("course", course);
-  };
+  useEffect(() => {
+    fetchTeacherUser();
+  }, []);
 
   return (
     <div className="">
@@ -125,15 +177,15 @@ const CreateCourse = () => {
           </Typography>
           <TextField
             select
-            name="prof"
-            value={course.prof}
+            name="teacherId"
+            value={course.teacherId}
             onChange={handleChange}
             fullWidth
             sx={{ marginBlock: 1 }}
           >
-            {Professors.map((Proffessor) => (
-              <MenuItem key={Proffessor} value={Proffessor}>
-                {Proffessor}
+            {professor.map((proffessor) => (
+              <MenuItem key={proffessor.name} value={proffessor.id}>
+                {proffessor.name}
               </MenuItem>
             ))}
           </TextField>
@@ -147,9 +199,9 @@ const CreateCourse = () => {
               Heure de début
             </Typography>
             <TextField
-              name="startHour"
+              name="startTime"
               type="time"
-              value={course.startHour}
+              value={course.startTime}
               onChange={handleChange}
               fullWidth
               sx={{ marginBlock: 1 }}
@@ -161,9 +213,9 @@ const CreateCourse = () => {
               Heure de fin
             </Typography>
             <TextField
-              name="endHour"
+              name="endTime"
               type="time"
-              value={course.endHour}
+              value={course.endTime}
               onChange={handleChange}
               fullWidth
               sx={{ marginBlock: 1 }}
@@ -177,10 +229,35 @@ const CreateCourse = () => {
           color="primary"
           className="w-full mt-4"
           sx={{ marginBlock: 1 }}
-          onClick={create}
+          onClick={fetchCreateCourse}
         >
-          Créer cours
+          {loading ? (
+            <CircularProgress sx={{ color: "white" }} size={24} />
+          ) : (
+            "Créer cours"
+          )}
         </Button>
+        <Popover
+          open={open}
+          anchorEl={anchorEl}
+          onClose={handleClose}
+          anchorOrigin={{
+            vertical: "top",
+            horizontal: "center",
+          }}
+        >
+          {success ? (
+            <Typography sx={{ p: 2, color: "green" }}>
+              <DoneIcon sx={{ color: "green", marginRight: 1 }} />
+              Cours crée avec succès.
+            </Typography>
+          ) : (
+            <Typography sx={{ p: 2, color: "red" }}>
+              <ErrorOutlineIcon sx={{ color: "red", marginRight: 1 }} />
+              Erreur lors de la création de cours.
+            </Typography>
+          )}
+        </Popover>
       </Card>
     </div>
   );

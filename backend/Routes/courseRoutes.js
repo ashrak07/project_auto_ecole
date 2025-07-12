@@ -5,6 +5,9 @@ const {
   getPlanning,
   deleteCourse,
   generateCourses,
+  getAllCourse,
+  getAllCoursesWithStatus,
+  getAllPlannings,
 } = require("../Controllers/courseController");
 
 const { roleMiddleware } = require("../Middlewares/roleMiddleware");
@@ -24,6 +27,10 @@ router.get(
   roleMiddleware(["manager", "teacher", "student"]),
   getPlanning
 );
+
+router.get("/courses", getAllCourse);
+router.get("/courses/teacher", getAllCoursesWithStatus);
+router.get("/courses/schedule", getAllPlannings);
 
 // Suppression de cours — manager uniquement
 router.delete("/courses/:id", roleMiddleware(["manager"]), deleteCourse);

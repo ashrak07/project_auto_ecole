@@ -4,12 +4,12 @@ const checkPointSchema = new mongoose.Schema(
   {
     courseId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Course",
+      ref: "Courses",
       required: true,
     },
     teacherId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User", // si les enseignants sont dans la collection "users"
+      ref: "Users", // si les enseignants sont dans la collection "users"
       required: true,
     },
     date: {

@@ -1,57 +1,37 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Card, Typography, Box, Chip } from "@mui/material";
 import AccessTimeFilledIcon from "@mui/icons-material/AccessTimeFilled";
+import { getPanning } from "../Axios/API";
 
 const days = ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi"];
 
-const staticCourses = [
-  {
-    title: "Code de la route",
-    chapter: "Signalisation",
-    day: "Lundi",
-    startHour: "08:00",
-    endHour: "09:30",
-    prof: "Mr Andry",
-  },
-  {
-    title: "Conduite",
-    chapter: "Créneaux",
-    day: "Mardi",
-    startHour: "10:00",
-    endHour: "11:30",
-    prof: "Mr Aina",
-  },
-  {
-    title: "Théorie",
-    chapter: "Priorités",
-    day: "Lundi",
-    startHour: "14:00",
-    endHour: "15:30",
-    prof: "Mr Anja",
-  },
-  {
-    title: "Conduite",
-    chapter: "Ronds-points",
-    day: "Mercredi",
-    startHour: "09:00",
-    endHour: "10:30",
-    prof: "Mr Antso",
-  },
-];
-
 const SheduleComponent = () => {
+  const [courses, setCourses] = useState([]);
+
+  const fetchCourse = async () => {
+    try {
+      const response = await getPanning();
+      if (response) {
+        console.log("++", response);
+        setCourses(response);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchCourse();
+  }, []);
   return (
     <div className="p-3">
       <Card sx={{ padding: 3, marginBottom: 5 }} elevation={0}>
-        <Typography fontWeight="bold" fontFamily="Montserrat">
-          EMPLOI DE TEMPS
-        </Typography>
+        <Typography variant="body-1">EMPLOI DE TEMPS</Typography>
+        <Typography variant="h3">EMPLOI DE TEMPS</Typography>
       </Card>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
         {days.map((day) => {
-          const dailyCourses = staticCourses.filter(
-            (course) => course.day === day
-          );
+          const dailyCourses = courses.filter((course) => course.day === day);
 
           return (
             <Card key={day} className="p-4" sx={{ background: "#90caf9" }}>
@@ -90,10 +70,10 @@ const SheduleComponent = () => {
                         fontSize="x-small"
                         sx={{ marginRight: "2px" }}
                       />
-                      {course.startHour} - {course.endHour}
+                      {course.startTime} - {course.endTime}
                     </Typography>
                     <Chip
-                      label={course.prof}
+                      label={course.teacherName}
                       size="small"
                       color="#f48fb1"
                       sx={{

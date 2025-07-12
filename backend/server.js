@@ -21,6 +21,7 @@ app.use(express.json());
 // Routes
 app.use("/auto-ecole", require("./Routes/userRoute"));
 app.use("/auto-ecole", require("./Routes/courseRoutes"));
+app.use("/auto-ecole", require("./Routes/dashboardRoute"));
 
 // Création du serveur HTTP
 const httpServer = http.createServer(app);

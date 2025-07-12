@@ -1,5 +1,5 @@
 import CreditCardIcon from "@mui/icons-material/CreditCard";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Card,
   CardContent,
@@ -12,55 +12,72 @@ import PeopleIcon from "@mui/icons-material/People";
 import SchoolIcon from "@mui/icons-material/School";
 import PersonIcon from "@mui/icons-material/Person";
 import EventIcon from "@mui/icons-material/Event";
-
-const stats = [
-  {
-    label: "Total utilisateurs",
-    value: 120,
-    goal: 200,
-    icon: (
-      <PeopleIcon
-        fontSize="large"
-        sx={{
-          color: "#f50057",
-        }}
-      />
-    ),
-    color: "#f50057",
-  },
-  {
-    label: "Enseignants",
-    value: 15,
-    goal: 30,
-    icon: (
-      <SchoolIcon
-        fontSize="large"
-        sx={{
-          color: "#7b1fa2",
-        }}
-      />
-    ),
-    color: "#7b1fa2",
-  },
-  {
-    label: "Élèves",
-    value: 95,
-    goal: 150,
-    icon: <PersonIcon fontSize="large" sx={{ color: "#00796b" }} />,
-    color: "#00796b",
-  },
-  {
-    label: "Cours créés",
-    value: 30,
-    goal: 60,
-    icon: <EventIcon fontSize="large" sx={{ color: "#388e3c" }} />,
-    color: "#388e3c",
-  },
-];
+import { dashboard } from "../Axios/API";
 
 const getProgress = (value, goal) => Math.min((value / goal) * 100, 100);
 
 const Dashboard = () => {
+  const [teacher, setTeacher] = useState();
+  const [student, setStudent] = useState();
+  const [user, setUser] = useState();
+
+  const fetchDashboard = async () => {
+    const response = await dashboard();
+    console.log("res =>", response);
+    setTeacher(response.teacher);
+    setStudent(response.student);
+    setUser(response.user);
+  };
+
+  useEffect(() => {
+    fetchDashboard(), [];
+  });
+
+  const stats = [
+    {
+      label: "Total utilisateurs",
+      value: user,
+      goal: user,
+      icon: (
+        <PeopleIcon
+          fontSize="large"
+          sx={{
+            color: "#f50057",
+          }}
+        />
+      ),
+      color: "#f50057",
+    },
+    {
+      label: "Enseignants",
+      value: teacher,
+      goal: user,
+      icon: (
+        <SchoolIcon
+          fontSize="large"
+          sx={{
+            color: "#7b1fa2",
+          }}
+        />
+      ),
+      color: "#7b1fa2",
+    },
+    {
+      label: "Élèves",
+      value: student,
+      goal: user,
+      icon: <PersonIcon fontSize="large" sx={{ color: "#00796b" }} />,
+      color: "#00796b",
+    },
+    {
+      label: "Cours créés",
+      value: 30,
+      goal: 60,
+      icon: <EventIcon fontSize="large" sx={{ color: "#388e3c" }} />,
+      color: "#388e3c",
+    },
+  ];
+
   return (
     <Box className="p-3">
       <Card

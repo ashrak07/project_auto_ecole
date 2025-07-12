@@ -4,7 +4,7 @@ const userSchema = new mongoose.Schema(
   {
     firstName: {
       type: String,
-      // required: true,
+      required: true,
     },
     lastName: {
       type: String,
@@ -25,10 +25,12 @@ const userSchema = new mongoose.Schema(
     },
     phone: {
       type: String,
-      unique: true,
+      // unique: true,
+      required: true,
     },
     dateOfBirth: {
       type: Date,
+      required: true,
     },
     address: {
       type: String,

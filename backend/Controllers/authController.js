@@ -31,6 +31,7 @@ const createUser = asyncHandler(async (req, res) => {
     const user = new Users({
       firstName,
       lastName,
+      phone,
       // email,
       // password: hashedPassword,
       role,
@@ -119,14 +120,29 @@ const deleteUser = async (req, res) => {
   }
 };
 
-const User = require("../Models/userModel");
+const getAllUsers = asyncHandler(async (req, res) => {
+  try {
+    const user = await Users.find().lean();
+    if (user) {
+      console.log("user =>", user);
+      res.status(200).json({
+        data: user,
+        count: user.length,
+      });
+    }
+  } catch (error) {
+    console.error(error);
+  }
+});
 
-// Récupérer les utilisateurs par type de permis
-const getUsersByPermis = async (req, res) => {
+const getUsersByPermis = asyncHandler(async (req, res) => {
   try {
     const { type } = req.params;
 
-    const users = await User.find({ permis: type });
+    const users = await Users.find({ permis: type });
+    if (users) {
+      console.log("users =>", users);
+    }
 
     if (users.length === 0) {
       return res
@@ -134,7 +150,7 @@ const getUsersByPermis = async (req, res) => {
         .json({ message: "Aucun utilisateur trouvé avec ce permis." });
     }
 
-    res.status(200).json(users);
+    res.status(200).json({ data: users, count: users.length });
   } catch (error) {
     console.error(
       "Erreur lors de la récupération des utilisateurs par permis :",
@@ -142,14 +158,39 @@ const getUsersByPermis = async (req, res) => {
     );
     res.status(500).json({ message: "Erreur serveur" });
   }
-};
+});
 
-module.exports = {
-  getUsersByPermis,
-};
+const getTeacherUser = asyncHandler(async (req, res) => {
+  try {
+    const users = await Users.find({ role: "teacher" }).lean();
+    console.log("users", users);
+    const userMap = users.map((user) => ({
+      name: user.firstName + " " + user.lastName,
+      id: user._id,
+    }));
+    console.log("userMap =>", userMap);
+    res.status(200).json({ data: userMap, count: users.length });
+  } catch (error) {
+    console.error(error);
+  }
+});
+
+const getStudentUser = asyncHandler(async (req, res) => {
+  try {
+    const users = await Users.find({ role: "student" }).lean();
+    console.log("users", users);
+    res.status(200).json({ data: users, count: users.length });
+  } catch (error) {
+    console.error(error);
+  }
+});
 
 module.exports = {
   createUser,
   login,
   deleteUser,
+  getAllUsers,
+  getUsersByPermis,
+  getTeacherUser,
+  getStudentUser,
 };

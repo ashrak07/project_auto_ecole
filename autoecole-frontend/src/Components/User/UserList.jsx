@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 
@@ -25,36 +25,52 @@ import {
   Button,
 } from "@mui/material";
 import { useDispatch } from "react-redux";
+import { useEffect } from "react";
+import { getUser } from "../../Axios/API";
 
-const users = [
-  {
-    name: "Rakoto Andry",
-    matricule: "MAT1234",
-    role: "student",
-    email: "andry@example.com",
-    dateOfBirth: "2001-06-21",
-    address: "Antananarivo",
-  },
-  {
-    name: "Rasoa Anja",
-    matricule: "MAT5678",
-    role: "teacher",
-    email: "anja@example.com",
-    dateOfBirth: "1990-12-12",
-    address: "Fianarantsoa",
-  },
-  {
-    name: "Randriamahazo Aina",
-    matricule: "MAT9876",
-    role: "manager",
-    email: "aina@example.com",
-    dateOfBirth: "1985-03-30",
-    address: "Toamasina",
-  },
-];
+// const users = [
+//   {
+//     name: "Rakoto Andry",
+//     matricule: "MAT1234",
+//     role: "student",
+//     email: "andry@example.com",
+//     dateOfBirth: "2001-06-21",
+//     address: "Antananarivo",
+//   },
+//   {
+//     name: "Rasoa Anja",
+//     matricule: "MAT5678",
+//     role: "teacher",
+//     email: "anja@example.com",
+//     dateOfBirth: "1990-12-12",
+//     address: "Fianarantsoa",
+//   },
+//   {
+//     name: "Randriamahazo Aina",
+//     matricule: "MAT9876",
+//     role: "manager",
+//     email: "aina@example.com",
+//     dateOfBirth: "1985-03-30",
+//     address: "Toamasina",
+//   },
+// ];
 
 const UserList = () => {
+  const [client, setClient] = useState([]);
+
   const dispatch = useDispatch();
+
+  const fetchUser = async () => {
+    const users = await getUser();
+    if (users) {
+      console.log("users +++", users.data);
+      setClient(users.data.data);
+    }
+  };
+
+  useEffect(() => {
+    fetchUser();
+  }, []);
 
   const setSelected = () => {
     dispatch(setSelectedList(false));
@@ -116,16 +132,16 @@ const UserList = () => {
               <TableCell sx={{}}>Nom</TableCell>
               <TableCell>Matricule</TableCell>
               <TableCell>Rôle</TableCell>
-              <TableCell>Email</TableCell>
+              <TableCell>Phone</TableCell>
               <TableCell>Date de naissance</TableCell>
-              <TableCell>Adresse</TableCell>
+              <TableCell>Permis</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {users.map((user, index) => (
+            {client.map((user, index) => (
               <TableRow key={index}>
                 <TableCell sx={{ fontFamily: "Poppins", fontSize: "small" }}>
-                  {user.name}
+                  {user.firstName}
                 </TableCell>
                 <TableCell sx={{ fontFamily: "Poppins", fontSize: "small" }}>
                   {user.matricule}
@@ -134,7 +150,7 @@ const UserList = () => {
                   {user.role}
                 </TableCell>
                 <TableCell sx={{ fontFamily: "Poppins", fontSize: "small" }}>
-                  {user.email}
+                  {user.phone}
                 </TableCell>
                 <TableCell sx={{ fontFamily: "Poppins", fontSize: "small" }}>
                   {user.dateOfBirth}

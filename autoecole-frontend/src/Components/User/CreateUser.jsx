@@ -1,5 +1,12 @@
 import React, { useState } from "react";
-import { Card, Box, Typography, Button, MenuItem } from "@mui/material";
+import {
+  Card,
+  Box,
+  Typography,
+  Button,
+  MenuItem,
+  CircularProgress,
+} from "@mui/material";
 import IconButton from "@mui/material/IconButton";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import InputAdornment from "@mui/material/InputAdornment";
@@ -19,38 +26,74 @@ import { setSelectedList } from "../../Redux/clientSlice";
 import dayjs from "dayjs";
 import { AxiosInstance } from "../../Axios/AxiosInstance";
 import { createUser } from "../../Axios/API";
+import BasicPopover from "../BasicPopover";
+import Popover from "@mui/material/Popover";
+import DoneIcon from "@mui/icons-material/Done";
+import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 
 const CreateUser = () => {
+  const roles = ["Enseignant", "Etudiant"];
+  const [loading, setLoading] = useState(false);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [success, setSuccess] = useState(true);
+
+  const open = Boolean(anchorEl);
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const dispatch = useDispatch();
   const [form, setForm] = useState({
     lastName: "",
     firstName: "",
     phone: "",
     role: "",
     address: "",
-    birthday: dayjs(),
+    dateOfBirth: dayjs(),
     permis: [],
   });
 
+  const emptyFrom = () => {
+    setForm({
+      lastName: "",
+      firstName: "",
+      phone: "",
+      role: "",
+      address: "",
+      dateOfBirth: null,
+      permis: [],
+    });
+  };
+
+  console.log("form =>", form);
+
   const fetchCreateUser = async () => {
+    console.log("form =>", form);
     try {
+      setLoading(true);
       const response = await createUser(form);
       if (response) {
         console.log("res =>", response.data);
+        setAnchorEl(true);
+        setSuccess(true);
+      } else {
+        setAnchorEl(true);
+        setSuccess(false);
       }
     } catch (error) {
       console.error(error);
+    } finally {
+      emptyFrom();
+      setLoading(false);
     }
   };
 
   // const [showPassword, setShowPassword] = React.useState(false);
-  const dispatch = useDispatch();
-
   // const handleClickShowPassword = () => setShowPassword((show) => !show);
-
   // const handleMouseDownPassword = (event) => {
   //   event.preventDefault();
   // };
-
   // const handleMouseUpPassword = (event) => {
   //   event.preventDefault();
   // };
@@ -58,8 +101,6 @@ const CreateUser = () => {
   const setList = () => {
     dispatch(setSelectedList(true));
   };
-
-  const roles = ["Enseignant", "Etudiant"];
 
   return (
     <div>
@@ -74,14 +115,11 @@ const CreateUser = () => {
           marginBottom: 3,
         }}
       >
-        <div>
-          <Typography
-            fontWeight="bold"
-            fontFamily="Montserrat"
-            sx={{ marginBlock: 2 }}
-          >
-            CREATION DES MEMBRES
-          </Typography>
+        <div
+          className="my-2"
+          style={{ fontFamily: "Montserrat", fontWeight: "bold" }}
+        >
+          CREATION DES MEMBRES
         </div>
         <div>
           <Button
@@ -105,15 +143,13 @@ const CreateUser = () => {
         }}
       >
         <div>
-          <Box
-            className=""
-            sx={{ display: "flex", justifyContent: "space-between", gap: 1 }}
-          >
-            <div className="my-2 " style={{ width: "50%" }}>
-              <Typography fontFamily="Poppins" fontSize="small  ">
+          <div className="flex justify-space-between gap-2">
+            <div className="my-2" style={{ width: "50%" }}>
+              <div style={{ fontFamily: "Poppins", fontSize: "small" }}>
                 Nom
-              </Typography>
+              </div>
               <TextField
+                fullWidth
                 name="lastName"
                 value={form.lastName}
                 onChange={(e) =>
@@ -125,9 +161,9 @@ const CreateUser = () => {
               />
             </div>
             <div className="my-2 " style={{ width: "50%" }}>
-              <Typography fontFamily="Poppins" fontSize="small  ">
+              <div style={{ fontFamily: "Poppins", fontSize: "small" }}>
                 Prénom
-              </Typography>
+              </div>
               <TextField
                 name="firstName"
                 value={form.firstName}
@@ -140,15 +176,16 @@ const CreateUser = () => {
                 fullWidth
               />
             </div>
-          </Box>
+          </div>
           <Box
             className=""
             sx={{ display: "flex", justifyContent: "space-between", gap: 1 }}
           >
             <div className="" style={{ width: "50%" }}>
-              <Typography fontFamily="Poppins" fontSize="small  ">
+              <div style={{ fontFamily: "Poppins", fontSize: "small" }}>
                 Téléphone
-              </Typography>
+              </div>
+
               <TextField
                 name="phone"
                 value={form.phone}
@@ -162,9 +199,9 @@ const CreateUser = () => {
               />
             </div>
             <div className="" style={{ width: "50%" }}>
-              <Typography fontFamily="Poppins" fontSize="small  ">
+              <div style={{ fontFamily: "Poppins", fontSize: "small" }}>
                 Role
-              </Typography>
+              </div>
               <TextField
                 select
                 name="role"
@@ -217,9 +254,10 @@ const CreateUser = () => {
           </Box>
           <Box>
             <div className="my-2">
-              <Typography fontFamily="Poppins" fontSize="small  ">
+              <div style={{ fontFamily: "Poppins", fontSize: "small" }}>
                 Adresse
-              </Typography>
+              </div>
+
               <TextField
                 name="address"
                 value={form.address}
@@ -236,16 +274,17 @@ const CreateUser = () => {
 
           <Box>
             <div className="my-2">
-              <Typography fontFamily="Poppins" fontSize="small  ">
+              <div style={{ fontFamily: "Poppins", fontSize: "small" }}>
                 Date de naissance
-              </Typography>
+              </div>
+
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DatePicker
-                  value={form.birthday}
+                  value={form.dateOfBirth}
                   onChange={(val) =>
                     setForm((prev) => ({
                       ...prev,
-                      birthday: val,
+                      dateOfBirth: val,
                     }))
                   }
                   sx={{ width: "100%" }}
@@ -254,9 +293,9 @@ const CreateUser = () => {
             </div>
           </Box>
           <Box>
-            <Typography fontSize="small" sx={{ fontFamily: "Poppins" }}>
+            <div style={{ fontFamily: "Poppins", fontSize: "small" }}>
               Permis
-            </Typography>
+            </div>
           </Box>
           <Box sx={{ display: "flex" }}>
             <FormControlLabel
@@ -383,8 +422,33 @@ const CreateUser = () => {
             variant="contained"
             sx={{ background: "#1976d2" }}
           >
-            Créer membre
+            {loading ? (
+              <CircularProgress sx={{ color: "white" }} size={24} />
+            ) : (
+              "Créer membre"
+            )}
           </Button>
+          <Popover
+            open={open}
+            anchorEl={anchorEl}
+            onClose={handleClose}
+            anchorOrigin={{
+              vertical: "top",
+              horizontal: "center",
+            }}
+          >
+            {success ? (
+              <Typography sx={{ p: 2, color: "green" }}>
+                <DoneIcon sx={{ color: "green", marginRight: 1 }} />
+                Membre crée avec succès.
+              </Typography>
+            ) : (
+              <Typography sx={{ p: 2, color: "red" }}>
+                <ErrorOutlineIcon sx={{ color: "red", marginRight: 1 }} />
+                Erreur lors de la création de membre.
+              </Typography>
+            )}
+          </Popover>
         </Box>
       </Card>
     </div>
